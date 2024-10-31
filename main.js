@@ -120,3 +120,38 @@ footer.appendChild(footerTitle);
 app.appendChild(header);
 app.appendChild(main);
 app.appendChild(footer);
+
+fileInput.addEventListener("change", (e) => {
+  let fileName = e.target.files[0].name;
+  let fileSize = Math.trunc(e.target.files[0].size / 1024) + " КБ";
+  let fileType = e.target.value.split(".").pop();
+  console.log(fileSize);
+  fileView(fileName, fileType);
+});
+
+const fileView = (fileName, fileType) => {
+  const showfileboxElem = document.createElement("div");
+  showfileboxElem.classList.add("fileWrapper__show-file-box");
+  const leftElem = document.createElement("div");
+  leftElem.classList.add("show-file-box__leftSide");
+  const fileTypeElem = document.createElement("span");
+  fileTypeElem.classList.add("left-side__span");
+  fileTypeElem.innerHTML = fileType;
+  leftElem.appendChild(fileTypeElem);
+  const filetitleElem = document.createElement("h3");
+  filetitleElem.innerHTML = fileName;
+  leftElem.appendChild(filetitleElem);
+  showfileboxElem.appendChild(leftElem);
+  const rightElem = document.createElement("div");
+  rightElem.classList.add("show-file-box__rightSide");
+  showfileboxElem.appendChild(rightElem);
+  const crossElem = document.createElement("span");
+  crossElem.innerHTML = "&#215;";
+  crossElem.classList.add("right-side__span");
+  rightElem.appendChild(crossElem);
+  fileWrapper.appendChild(showfileboxElem);
+
+  crossElem.addEventListener("click", () => {
+    fileWrapper.removeChild(showfileboxElem);
+  });
+};
