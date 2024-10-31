@@ -63,27 +63,6 @@ const uploadedFilesDescription = document.createElement("h3");
 uploadedFilesDescription.className = "fileWrapper__uploaded-files-description";
 uploadedFilesDescription.textContent = "Uploaded files";
 
-const showFileBox = document.createElement("div");
-showFileBox.className = "fileWrapper__show-file-box";
-
-const leftSide = document.createElement("div");
-leftSide.className = "show-file-box__leftSide";
-
-const spanLeftSide = document.createElement("span");
-spanLeftSide.className = "left-side__span";
-spanLeftSide.innerHTML = "Расширение";
-
-const nameFile = document.createElement("h3");
-nameFile.className = "left-side__name-file";
-nameFile.textContent = "Название файла";
-
-const rightSide = document.createElement("div");
-rightSide.className = "show-file-box__rightSide";
-
-const spanRightSide = document.createElement("span");
-spanRightSide.className = "right-side__span";
-spanRightSide.innerHTML = "&#215;";
-
 labelInput.appendChild(spanLabel);
 labelInput.appendChild(pLabel);
 
@@ -91,16 +70,7 @@ form.appendChild(fileInput);
 form.appendChild(labelInput);
 form.appendChild(submitButton);
 
-leftSide.appendChild(spanLeftSide);
-leftSide.appendChild(nameFile);
-
-rightSide.appendChild(spanRightSide);
-
-showFileBox.appendChild(leftSide);
-showFileBox.appendChild(rightSide);
-
 fileWrapper.appendChild(uploadedFilesDescription);
-fileWrapper.appendChild(showFileBox);
 
 main.appendChild(mainTitle);
 main.appendChild(mainDescription);
@@ -123,35 +93,44 @@ app.appendChild(footer);
 
 fileInput.addEventListener("change", (e) => {
   let fileName = e.target.files[0].name;
-  let fileSize = Math.trunc(e.target.files[0].size / 1024) + " КБ";
+  let fileSize = Math.round(e.target.files[0].size / 1024) + " КБ";
   let fileType = e.target.value.split(".").pop();
-  console.log(fileSize);
-  fileView(fileName, fileType);
+  fileView(fileName, fileType, fileSize);
 });
 
-const fileView = (fileName, fileType) => {
-  const showfileboxElem = document.createElement("div");
-  showfileboxElem.classList.add("fileWrapper__show-file-box");
-  const leftElem = document.createElement("div");
-  leftElem.classList.add("show-file-box__leftSide");
+const fileView = (fileName, fileType, fileSize) => {
+  const showFileBox = document.createElement("div");
+  showFileBox.classList.add("fileWrapper__show-file-box");
+
+  const leftSide = document.createElement("div");
+  leftSide.classList.add("show-file-box__leftSide");
+
   const fileTypeElem = document.createElement("span");
   fileTypeElem.classList.add("left-side__span");
   fileTypeElem.innerHTML = fileType;
-  leftElem.appendChild(fileTypeElem);
-  const filetitleElem = document.createElement("h3");
-  filetitleElem.innerHTML = fileName;
-  leftElem.appendChild(filetitleElem);
-  showfileboxElem.appendChild(leftElem);
-  const rightElem = document.createElement("div");
-  rightElem.classList.add("show-file-box__rightSide");
-  showfileboxElem.appendChild(rightElem);
-  const crossElem = document.createElement("span");
-  crossElem.innerHTML = "&#215;";
-  crossElem.classList.add("right-side__span");
-  rightElem.appendChild(crossElem);
-  fileWrapper.appendChild(showfileboxElem);
+  leftSide.appendChild(fileTypeElem);
 
-  crossElem.addEventListener("click", () => {
-    fileWrapper.removeChild(showfileboxElem);
+  const fileTitleElem = document.createElement("h3");
+  fileTitleElem.innerHTML = fileName;
+  leftSide.appendChild(fileTitleElem);
+
+  const fileSizeElem = document.createElement("h4");
+  fileSizeElem.innerHTML = fileSize;
+  leftSide.appendChild(fileSizeElem);
+
+  showFileBox.appendChild(leftSide);
+
+  const rightSide = document.createElement("div");
+  rightSide.classList.add("show-file-box__rightSide");
+  showFileBox.appendChild(rightSide);
+
+  const deleteSpan = document.createElement("span");
+  deleteSpan.innerHTML = "&#215;";
+  deleteSpan.classList.add("right-side__span");
+  rightSide.appendChild(deleteSpan);
+  fileWrapper.appendChild(showFileBox);
+
+  deleteSpan.addEventListener("click", () => {
+    fileWrapper.removeChild(showFileBox);
   });
 };
