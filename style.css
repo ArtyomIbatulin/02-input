@@ -42,27 +42,6 @@ h1 {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -93,4 +72,73 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+.main__label-input {
+  width: 100%;
+  min-height: 100px;
+  background: #73b0d60d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 3px dashed #45b0f382;
+  margin-bottom: 10px;
+}
+
+.label-input__span {
+  font-size: 70px;
+  color: #18a7ff;
+}
+
+.label-input__p {
+  color: #18a7ff;
+  font-size: 20px;
+}
+
+.fileWrapper__uploaded-files-description{
+  margin: 30px 0;
+  color: #a5a5a5;
+}
+
+.fileWrapper__show-file-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding: 10px 15px;
+  box-shadow: inset #0000000d 0px 0px 0px 1px, #d1d5db3d 0px 0px 0px 1px ;
+}
+
+.show-file-box__leftSide {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.left-side__span {
+  background: #18a7ff;
+  color: white;
+  padding: 5px 15px;
+  font-size: 20px;
+  text-transform: capitalize;
+  border-radius: 3px;
+}
+
+.left-side__name-file {
+  color: #292f42;
+  margin: 0;
+}
+
+.right-side__span {
+  color: red;
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  line-height: 25px;
+  font-weight: 700;
+  cursor: pointer;
 }
