@@ -23,7 +23,10 @@ mainDescription.className = "main__description";
 mainDescription.textContent = "Это кастомный input";
 
 const form = document.createElement("form");
-form.action = "";
+form.id = "file-form";
+form.method = "POST";
+form.enctype = "multipart/form-data";
+// form.onsubmit = "return false;";
 form.className = "main__form";
 
 const fileInput = document.createElement("input");
@@ -63,6 +66,21 @@ const uploadedFilesDescription = document.createElement("h3");
 uploadedFilesDescription.className = "fileWrapper__uploaded-files-description";
 uploadedFilesDescription.textContent = "Uploaded files";
 
+const previewContainer = document.createElement("div");
+previewContainer.className = "preview-container";
+
+const errorContainer = document.createElement("div");
+errorContainer.className = "main__error-container";
+
+const errorContainerFileId = document.createElement("div");
+errorContainerFileId.className = "main__error-container--fileId";
+
+const errorContainerType = document.createElement("div");
+errorContainerType.className = "main__error-container--type";
+
+const errorContainerSize = document.createElement("div");
+errorContainerSize.className = "main__error-container--size";
+
 labelInput.appendChild(spanLabel);
 labelInput.appendChild(pLabel);
 
@@ -77,6 +95,11 @@ main.appendChild(mainDescription);
 main.appendChild(form);
 main.appendChild(fileDescription);
 main.appendChild(fileWrapper);
+main.appendChild(previewContainer);
+main.appendChild(errorContainer);
+main.appendChild(errorContainerType);
+main.appendChild(errorContainerSize);
+main.appendChild(errorContainerFileId);
 
 const footer = document.createElement("footer");
 footer.className = "footer";
@@ -91,14 +114,69 @@ app.appendChild(header);
 app.appendChild(main);
 app.appendChild(footer);
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const addedFiles = new Set();
+let selectedFiles = [];
+
 fileInput.addEventListener("change", (e) => {
-  let fileName = e.target.files[0].name;
-  let fileSize = Math.round(e.target.files[0].size / 1024) + " КБ";
-  let fileType = e.target.value.split(".").pop();
-  fileView(fileName, fileType, fileSize);
+  const files = e.target.files;
+  errorContainer.textContent = "";
+  errorContainerSize.textContent = "";
+  errorContainerType.textContent = "";
+  errorContainerFileId.textContent = "";
+  selectedFiles = [];
+
+  Array.from(files).forEach((file) => {
+    let fileName = file.name;
+    let fileSize = Math.round(file.size / 1024) + " КБ";
+    let fileType = file.name.split(".").pop().toLowerCase();
+    const fileId = `${fileName}-${fileSize}`;
+
+    // if (addedFiles.has(fileId)) {
+    //   errorContainerFileId.textContent = `Файл ${fileId} уже добавлен`;
+    //   return;
+    // }
+
+    // if (!["png", "jpeg", "jpg"].includes(fileType)) {
+    //   errorContainerType.textContent =
+    //     "Можно загружать только файлы с расширениями .png, .jpeg, .jpg";
+    //   return;
+    // }
+
+    // if (file.size > MAX_FILE_SIZE) {
+    //   errorContainerSize.textContent = "Размер файла не должен превышать 10 МБ";
+    //   return;
+    // }
+
+    // if (files.length > 5) {
+    //   errorContainer.textContent = "Можно загрузить не более 5 файлов";
+    //   return;
+    // }
+
+    addedFiles.add(fileId);
+    selectedFiles.push(file);
+
+    fileView(fileName, fileType, fileSize, fileId);
+  });
+
+  // previewContainer.innerHTML = "";
+
+  // if (e.target.files[0].type.startsWith("image/")) {
+  //   const reader = new FileReader();
+  //   reader.onload = (e) => {
+  //     const img = document.createElement("img");
+  //     img.src = e.target.result;
+  //     img.alt = fileName;
+  //     img.style.width = "100px";
+  //     img.style.height = "auto";
+  //     previewContainer.appendChild(img);
+  //   };
+
+  //   reader.readAsDataURL(e.target.files[0]);
+  // }
 });
 
-const fileView = (fileName, fileType, fileSize) => {
+const fileView = (fileName, fileType, fileSize, fileId) => {
   const showFileBox = document.createElement("div");
   showFileBox.classList.add("fileWrapper__show-file-box");
 
@@ -132,5 +210,45 @@ const fileView = (fileName, fileType, fileSize) => {
 
   deleteSpan.addEventListener("click", () => {
     fileWrapper.removeChild(showFileBox);
+    addedFiles.delete(fileId);
   });
 };
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  if (selectedFiles.length === 0) {
+    errorContainer.textContent = "Выберите хотя бы один файл перед отправкой";
+    return;
+  }
+
+  const formData = new FormData(form);
+
+  selectedFiles.forEach((file, index) => {
+    formData.append(`file${index + 1}`, file);
+  });
+
+  fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    body: JSON.stringify(formData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка отправки данных");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Успешная отправка данных:", data);
+    })
+    .catch((error) => {
+      console.error("Произошла ошибка:", error);
+    });
+
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+  }
+});

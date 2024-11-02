@@ -74,6 +74,21 @@ button:focus-visible {
   }
 }
 
+.main__error-container {
+  color: red;
+}
+
+.main__error-container--type {
+  color: red;
+}
+
+.main__error-container--size {
+  color: red;
+}
+
+.main__error-container--fileId {
+  color: red;
+}
 
 .main__label-input {
   width: 100%;
@@ -109,7 +124,7 @@ button:focus-visible {
   justify-content: space-between;
   margin: 10px 0;
   padding: 10px 15px;
-  /* box-shadow: inset #0000000d 0px 0px 0px 1px, #d1d5db3d 0px 0px 0px 1px ; */
+  box-shadow:  #0000000d 0px 0px 0px 1px, #d1d5db3d 0px 0px 0px 1px inset;
 }
 
 .show-file-box__leftSide {
