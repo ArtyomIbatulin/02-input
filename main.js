@@ -23,10 +23,8 @@ mainDescription.className = "main__description";
 mainDescription.textContent = "Это кастомный input";
 
 const form = document.createElement("form");
-form.id = "file-form";
 form.method = "POST";
 form.enctype = "multipart/form-data";
-// form.onsubmit = "return false;";
 form.className = "main__form";
 
 const fileInput = document.createElement("input");
@@ -115,48 +113,50 @@ app.appendChild(main);
 app.appendChild(footer);
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_COUNT = 5;
 const addedFiles = new Set();
 let selectedFiles = [];
 
 fileInput.addEventListener("change", (e) => {
-  const files = e.target.files;
-  errorContainer.textContent = "";
-  errorContainerSize.textContent = "";
-  errorContainerType.textContent = "";
-  errorContainerFileId.textContent = "";
-  selectedFiles = [];
+  const files = Array.from(e.target.files);
 
-  Array.from(files).forEach((file) => {
+  errorContainer.textContent = "";
+  let rejectedFiles = [];
+
+  if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
+    const availableSlots = MAX_FILE_COUNT - selectedFiles.length;
+    rejectedFiles = files.slice(availableSlots).map((file) => file.name);
+    files.splice(availableSlots);
+    errorContainer.textContent = `Эти файлы не добавлены, так как превышено максимальное количество файлов: ${rejectedFiles.join(
+      ", "
+    )}`;
+  }
+
+  files.forEach((file) => {
     let fileName = file.name;
     let fileSize = Math.round(file.size / 1024) + " КБ";
     let fileType = file.name.split(".").pop().toLowerCase();
     const fileId = `${fileName}-${fileSize}`;
 
-    // if (addedFiles.has(fileId)) {
-    //   errorContainerFileId.textContent = `Файл ${fileId} уже добавлен`;
-    //   return;
-    // }
+    if (addedFiles.has(fileId)) {
+      errorContainer.textContent += `\nФайл ${fileId} уже добавлен`;
+      return;
+    }
 
-    // if (!["png", "jpeg", "jpg"].includes(fileType)) {
-    //   errorContainerType.textContent =
-    //     "Можно загружать только файлы с расширениями .png, .jpeg, .jpg";
-    //   return;
-    // }
+    if (!["png", "jpeg", "jpg"].includes(fileType)) {
+      errorContainer.textContent += `\nУ файла ${file.name} не тот формат`;
+      return;
+    }
 
-    // if (file.size > MAX_FILE_SIZE) {
-    //   errorContainerSize.textContent = "Размер файла не должен превышать 10 МБ";
-    //   return;
-    // }
-
-    // if (files.length > 5) {
-    //   errorContainer.textContent = "Можно загрузить не более 5 файлов";
-    //   return;
-    // }
+    if (file.size > MAX_FILE_SIZE) {
+      errorContainer.textContent += `\nФайл ${file.name} весит больше 10 МБ`;
+      return;
+    }
 
     addedFiles.add(fileId);
     selectedFiles.push(file);
 
-    fileView(fileName, fileType, fileSize, fileId);
+    fileView(fileName, fileType, fileSize, fileId, file);
   });
 
   // previewContainer.innerHTML = "";
@@ -176,7 +176,7 @@ fileInput.addEventListener("change", (e) => {
   // }
 });
 
-const fileView = (fileName, fileType, fileSize, fileId) => {
+const fileView = (fileName, fileType, fileSize, fileId, file) => {
   const showFileBox = document.createElement("div");
   showFileBox.classList.add("fileWrapper__show-file-box");
 
@@ -211,6 +211,7 @@ const fileView = (fileName, fileType, fileSize, fileId) => {
   deleteSpan.addEventListener("click", () => {
     fileWrapper.removeChild(showFileBox);
     addedFiles.delete(fileId);
+    selectedFiles = selectedFiles.filter((f) => f !== file);
   });
 };
 
