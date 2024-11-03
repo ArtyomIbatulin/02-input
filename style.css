@@ -103,6 +103,10 @@ button:focus-visible {
   margin-bottom: 10px;
 }
 
+.main__label-input.drag-over {
+  border: 5px solid #45b0f382;
+}
+
 .label-input__span {
   font-size: 70px;
   color: #18a7ff;

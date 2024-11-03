@@ -44,7 +44,7 @@ spanLabel.innerHTML = "	&#8853;";
 spanLabel.className = "label-input__span";
 
 const pLabel = document.createElement("p");
-pLabel.textContent = "Click to upload";
+pLabel.textContent = "Drag files or click to upload";
 pLabel.className = "label-input__p";
 
 const submitButton = document.createElement("button");
@@ -67,15 +67,6 @@ uploadedFilesDescription.textContent = "Uploaded files";
 const errorContainer = document.createElement("div");
 errorContainer.className = "main__error-container";
 
-const errorContainerFileId = document.createElement("div");
-errorContainerFileId.className = "main__error-container--fileId";
-
-const errorContainerType = document.createElement("div");
-errorContainerType.className = "main__error-container--type";
-
-const errorContainerSize = document.createElement("div");
-errorContainerSize.className = "main__error-container--size";
-
 labelInput.appendChild(spanLabel);
 labelInput.appendChild(pLabel);
 
@@ -91,9 +82,6 @@ main.appendChild(form);
 main.appendChild(fileDescription);
 main.appendChild(fileWrapper);
 main.appendChild(errorContainer);
-main.appendChild(errorContainerType);
-main.appendChild(errorContainerSize);
-main.appendChild(errorContainerFileId);
 
 const footer = document.createElement("footer");
 footer.className = "footer";
@@ -113,9 +101,12 @@ const MAX_FILE_COUNT = 5;
 const addedFiles = new Set();
 let selectedFiles = [];
 
-fileInput.addEventListener("change", (e) => {
+const bringFiles = (e) => {
   const files = Array.from(e.target.files);
+  selectFiles(files);
+};
 
+const selectFiles = (files) => {
   errorContainer.textContent = "";
   let rejectedFiles = [];
 
@@ -173,11 +164,11 @@ fileInput.addEventListener("change", (e) => {
     addedFiles.add(fileId);
     selectedFiles.push(file);
 
-    fileView(fileName, fileType, fileSize, fileId, file, rightSide);
+    viewFiles(fileName, fileType, fileSize, fileId, file, rightSide);
   });
-});
+};
 
-const fileView = (fileName, fileType, fileSize, fileId, file, rightSide) => {
+const viewFiles = (fileName, fileType, fileSize, fileId, file, rightSide) => {
   const showFileBox = document.createElement("div");
   showFileBox.classList.add("fileWrapper__show-file-box");
 
@@ -213,6 +204,25 @@ const fileView = (fileName, fileType, fileSize, fileId, file, rightSide) => {
     selectedFiles = selectedFiles.filter((f) => f !== file);
   });
 };
+
+fileInput.addEventListener("change", bringFiles);
+
+labelInput.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  labelInput.classList.add("drag-over");
+});
+
+labelInput.addEventListener("dragleave", () => {
+  labelInput.classList.remove("drag-over");
+});
+
+labelInput.addEventListener("drop", (e) => {
+  e.preventDefault();
+  labelInput.classList.remove("drag-over");
+
+  const files = Array.from(e.dataTransfer.files);
+  selectFiles(files);
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
