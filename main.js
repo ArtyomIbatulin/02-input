@@ -41,11 +41,11 @@ labelInput.className = "main__label-input";
 
 const spanLabel = document.createElement("span");
 spanLabel.innerHTML = "	&#8853;";
-spanLabel.className = "label-input__span";
+spanLabel.className = "label-input__circle";
 
 const pLabel = document.createElement("p");
 pLabel.textContent = "Drag files or click to upload";
-pLabel.className = "label-input__p";
+pLabel.className = "label-input__description";
 
 const submitButton = document.createElement("button");
 submitButton.type = "submit";
@@ -59,6 +59,10 @@ fileDescription.textContent =
 
 const fileWrapper = document.createElement("div");
 fileWrapper.className = "main__fileWrapper";
+
+// const showFileBox = document.createElement("div");
+// showFileBox.className = "fileWrapper__show-file-box";
+// showFileBox.setAttribute("draggable", "true");
 
 const uploadedFilesDescription = document.createElement("h3");
 uploadedFilesDescription.className = "fileWrapper__uploaded-files-description";
@@ -124,25 +128,56 @@ const selectFiles = (files) => {
     let fileSize = Math.round(file.size / 1024) + " КБ";
     let fileType = file.name.split(".").pop().toLowerCase();
     const fileId = `${fileName}-${fileSize}`;
+    let draggedElement = null;
 
     const rightSide = document.createElement("div");
     rightSide.classList.add("show-file-box__right-side");
 
     const previewContainer = document.createElement("div");
     previewContainer.classList.add("right-side__preview-container");
+    // previewContainer.setAttribute("draggable", "true");
+
+    // showFileBox.addEventListener("dragstart", (e) => {
+    //   draggedElement = e.currentTarget;
+
+    //   setTimeout(() => {
+    //     draggedElement.classList.add("hidden");
+    //   }, 0);
+    // });
+
+    // showFileBox.addEventListener("dragover", (e) => {
+    //   e.preventDefault();
+    //   const target = e.currentTarget;
+
+    //   if (draggedElement !== target) {
+    //     const bounding = target.getBoundingClientRect();
+    //     const offset = e.clientY - bounding.top;
+
+    //     const insertPosition =
+    //       offset > bounding.height / 2 ? target.nextSibling : target;
+    //     fileWrapper.insertBefore(draggedElement, insertPosition);
+    //   }
+    // });
+
+    // showFileBox.addEventListener("drop", (e) => {
+    //   e.preventDefault();
+
+    //   draggedElement.classList.remove("hidden");
+    //   draggedElement = null;
+    // });
 
     if (addedFiles.has(fileId)) {
-      errorContainer.textContent += `\nФайл ${fileId} уже добавлен`;
+      errorContainer.textContent += `Файл ${fileId} уже добавлен\n`;
       return;
     }
 
     if (!["png", "jpeg", "jpg"].includes(fileType)) {
-      errorContainer.textContent += `\nУ файла ${file.name} не тот формат`;
+      errorContainer.textContent += `У файла ${file.name} не тот формат\n`;
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      errorContainer.textContent += `\nФайл ${file.name} весит больше 10 МБ`;
+      errorContainer.textContent += `Файл ${file.name} весит больше 10 МБ\n`;
       return;
     }
 
@@ -194,7 +229,7 @@ const viewFiles = (fileName, fileType, fileSize, fileId, file, rightSide) => {
 
   const deleteSpan = document.createElement("span");
   deleteSpan.innerHTML = "&#215;";
-  deleteSpan.classList.add("right-side__span");
+  deleteSpan.classList.add("right-side__delete");
   rightSide.appendChild(deleteSpan);
   fileWrapper.appendChild(showFileBox);
 

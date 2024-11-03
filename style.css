@@ -38,7 +38,6 @@ h1 {
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -75,19 +74,8 @@ button:focus-visible {
 }
 
 .main__error-container {
-  color: red;
-}
-
-.main__error-container--type {
-  color: red;
-}
-
-.main__error-container--size {
-  color: red;
-}
-
-.main__error-container--fileId {
-  color: red;
+  color: rgb(224, 18, 18);
+  white-space: pre-line;
 }
 
 .main__label-input {
@@ -107,12 +95,12 @@ button:focus-visible {
   border: 5px solid #45b0f382;
 }
 
-.label-input__span {
+.label-input__circle {
   font-size: 70px;
   color: #18a7ff;
 }
 
-.label-input__p {
+.label-input__description {
   color: #18a7ff;
   font-size: 20px;
 }
@@ -161,8 +149,12 @@ button:focus-visible {
   gap: 20px;
 }
 
-.right-side__span {
-  color: red;
+.right-side__preview-container.hidden {
+  display: none;
+}
+
+.right-side__delete {
+  color: rgb(224, 18, 18);
   width: 25px;
   height: 25px;
   font-size: 25px;
