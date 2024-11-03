@@ -127,12 +127,14 @@ button:focus-visible {
   box-shadow:  #0000000d 0px 0px 0px 1px, #d1d5db3d 0px 0px 0px 1px inset;
 }
 
-.show-file-box__leftSide {
+.show-file-box__left-side {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
 }
+
+
 
 .left-side__span {
   background: #18a7ff;
@@ -146,6 +148,13 @@ button:focus-visible {
 .left-side__name-file {
   color: #292f42;
   margin: 0;
+}
+
+.show-file-box__right-side {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .right-side__span {

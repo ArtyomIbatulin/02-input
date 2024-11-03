@@ -64,9 +64,6 @@ const uploadedFilesDescription = document.createElement("h3");
 uploadedFilesDescription.className = "fileWrapper__uploaded-files-description";
 uploadedFilesDescription.textContent = "Uploaded files";
 
-const previewContainer = document.createElement("div");
-previewContainer.className = "preview-container";
-
 const errorContainer = document.createElement("div");
 errorContainer.className = "main__error-container";
 
@@ -93,7 +90,6 @@ main.appendChild(mainDescription);
 main.appendChild(form);
 main.appendChild(fileDescription);
 main.appendChild(fileWrapper);
-main.appendChild(previewContainer);
 main.appendChild(errorContainer);
 main.appendChild(errorContainerType);
 main.appendChild(errorContainerSize);
@@ -138,6 +134,12 @@ fileInput.addEventListener("change", (e) => {
     let fileType = file.name.split(".").pop().toLowerCase();
     const fileId = `${fileName}-${fileSize}`;
 
+    const rightSide = document.createElement("div");
+    rightSide.classList.add("show-file-box__right-side");
+
+    const previewContainer = document.createElement("div");
+    previewContainer.classList.add("right-side__preview-container");
+
     if (addedFiles.has(fileId)) {
       errorContainer.textContent += `\nФайл ${fileId} уже добавлен`;
       return;
@@ -153,35 +155,34 @@ fileInput.addEventListener("change", (e) => {
       return;
     }
 
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = fileName;
+      img.style.width = "100px";
+      img.style.height = "auto";
+
+      previewContainer.appendChild(img);
+    };
+
+    reader.readAsDataURL(file);
+
+    rightSide.appendChild(previewContainer);
+
     addedFiles.add(fileId);
     selectedFiles.push(file);
 
-    fileView(fileName, fileType, fileSize, fileId, file);
+    fileView(fileName, fileType, fileSize, fileId, file, rightSide);
   });
-
-  // previewContainer.innerHTML = "";
-
-  // if (e.target.files[0].type.startsWith("image/")) {
-  //   const reader = new FileReader();
-  //   reader.onload = (e) => {
-  //     const img = document.createElement("img");
-  //     img.src = e.target.result;
-  //     img.alt = fileName;
-  //     img.style.width = "100px";
-  //     img.style.height = "auto";
-  //     previewContainer.appendChild(img);
-  //   };
-
-  //   reader.readAsDataURL(e.target.files[0]);
-  // }
 });
 
-const fileView = (fileName, fileType, fileSize, fileId, file) => {
+const fileView = (fileName, fileType, fileSize, fileId, file, rightSide) => {
   const showFileBox = document.createElement("div");
   showFileBox.classList.add("fileWrapper__show-file-box");
 
   const leftSide = document.createElement("div");
-  leftSide.classList.add("show-file-box__leftSide");
+  leftSide.classList.add("show-file-box__left-side");
 
   const fileTypeElem = document.createElement("span");
   fileTypeElem.classList.add("left-side__span");
@@ -198,8 +199,6 @@ const fileView = (fileName, fileType, fileSize, fileId, file) => {
 
   showFileBox.appendChild(leftSide);
 
-  const rightSide = document.createElement("div");
-  rightSide.classList.add("show-file-box__rightSide");
   showFileBox.appendChild(rightSide);
 
   const deleteSpan = document.createElement("span");
