@@ -60,10 +60,6 @@ fileDescription.textContent =
 const fileWrapper = document.createElement("div");
 fileWrapper.className = "main__fileWrapper";
 
-// const showFileBox = document.createElement("div");
-// showFileBox.className = "fileWrapper__show-file-box";
-// showFileBox.setAttribute("draggable", "true");
-
 const uploadedFilesDescription = document.createElement("h3");
 uploadedFilesDescription.className = "fileWrapper__uploaded-files-description";
 uploadedFilesDescription.textContent = "Uploaded files";
@@ -120,7 +116,7 @@ const selectFiles = (files) => {
     files.splice(availableSlots);
     errorContainer.textContent = `Эти файлы не добавлены, так как превышено максимальное количество файлов: ${rejectedFiles.join(
       ", "
-    )}`;
+    )}\n`;
   }
 
   files.forEach((file) => {
@@ -128,43 +124,12 @@ const selectFiles = (files) => {
     let fileSize = Math.round(file.size / 1024) + " КБ";
     let fileType = file.name.split(".").pop().toLowerCase();
     const fileId = `${fileName}-${fileSize}`;
-    let draggedElement = null;
 
     const rightSide = document.createElement("div");
     rightSide.classList.add("show-file-box__right-side");
 
     const previewContainer = document.createElement("div");
     previewContainer.classList.add("right-side__preview-container");
-    // previewContainer.setAttribute("draggable", "true");
-
-    // showFileBox.addEventListener("dragstart", (e) => {
-    //   draggedElement = e.currentTarget;
-
-    //   setTimeout(() => {
-    //     draggedElement.classList.add("hidden");
-    //   }, 0);
-    // });
-
-    // showFileBox.addEventListener("dragover", (e) => {
-    //   e.preventDefault();
-    //   const target = e.currentTarget;
-
-    //   if (draggedElement !== target) {
-    //     const bounding = target.getBoundingClientRect();
-    //     const offset = e.clientY - bounding.top;
-
-    //     const insertPosition =
-    //       offset > bounding.height / 2 ? target.nextSibling : target;
-    //     fileWrapper.insertBefore(draggedElement, insertPosition);
-    //   }
-    // });
-
-    // showFileBox.addEventListener("drop", (e) => {
-    //   e.preventDefault();
-
-    //   draggedElement.classList.remove("hidden");
-    //   draggedElement = null;
-    // });
 
     if (addedFiles.has(fileId)) {
       errorContainer.textContent += `Файл ${fileId} уже добавлен\n`;
@@ -263,7 +228,7 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   if (selectedFiles.length === 0) {
-    errorContainer.textContent = "Выберите хотя бы один файл перед отправкой";
+    errorContainer.textContent = "Выберите хотя бы один файл перед отправкой\n";
     return;
   }
 
